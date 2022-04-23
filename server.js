@@ -89,7 +89,7 @@ app.put("/todo/:id", async (req, res) => {
 	const todo = await Todo.findById(id);
 	// update  the todos completed property
 	todo.completed = true;
-	todo.save(); // save changes
+	await todo.save(); // save changes
 	// redirect back to main page
 	res.redirect("/");
 })
