@@ -6,6 +6,7 @@ const express = require('express'); // web framework
 const mongoose = require('mongoose'); // Object document Manager (Work With DB)
 const methodOverride = require('method-override'); //override request methods
 const morgan = require("morgan"); // be used for logging 
+const { send } = require("process");
 
 //////////////////////////////////////////
 // Set up database connection
@@ -73,6 +74,25 @@ app.get('/todo/seed/', async (req, res) => {
 	//send the todos as json
 	res.json(todos);
 });
+
+app.post("/todo", async (req, res) => {
+	// create the todo
+	await Todo.create(req.body).catch((err) => {send.err});
+	// redirect back to main page
+	res.redirect("/");
+});
+
+app.put("/todo/:id", async (req, res) => {
+	// get the id from params
+	const id = req.params.id;
+	// get todo to be updated
+	const todo = await Todo.findById(id);
+	// update  the todos completed property
+	todo.completed = true;
+	todo.save(); // save changes
+	// redirect back to main page
+	res.redirect("/");
+})
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {console.log(`listening on port: `, PORT)});
